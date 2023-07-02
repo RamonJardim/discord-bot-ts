@@ -3,6 +3,7 @@
     "configurations": [
         {
             "name": "Launch index.ts",
+            "runtimeVersion": "18",
             "type": "node",
             "request": "launch",
             "runtimeArgs": [

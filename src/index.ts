@@ -1,7 +1,8 @@
 import { ActivityType, Events, GatewayIntentBits } from 'discord.js';
 import dotenv from 'dotenv';
 import ExpandedClient from './classes/ExpandedClient';
-import { Doge } from './commands';
+import { Doge, VaiPassear } from './commands';
+import Constants from './utils/constants';
 
 dotenv.config();
 
@@ -22,6 +23,13 @@ const client = new ExpandedClient({
 }, botPrefix);
 
 client.commands.set(Doge.commandName, new Doge(client));
+client.commands.set(VaiPassear.commandName, new VaiPassear(client));
+
+// client.on(Events.VoiceStateUpdate, (oldMember, newMember) => {
+//   if (Constants.strollingMembers[newMember.id]) {
+//       newMember.setVoiceChannel(null);
+//   }
+// });
 
 client.on(Events.ClientReady, () => {
   client.user.setActivity('LoL as Zoe', { type: ActivityType.Playing });
