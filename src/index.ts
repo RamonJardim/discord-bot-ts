@@ -1,4 +1,4 @@
-import { Events, GatewayIntentBits } from 'discord.js';
+import { ActivityType, Events, GatewayIntentBits } from 'discord.js';
 import dotenv from 'dotenv';
 import ExpandedClient from './classes/ExpandedClient';
 import { Doge } from './commands';
@@ -24,6 +24,8 @@ const client = new ExpandedClient({
 client.commands.set(Doge.commandName, new Doge(client));
 
 client.on(Events.ClientReady, () => {
+  client.user.setActivity('LoL as Zoe', { type: ActivityType.Playing });
+
   console.log('Bot is ready!', '\n');
   console.log('Bot is in the following servers:');
   client.guilds.cache.forEach(guild => console.log(guild.name));
