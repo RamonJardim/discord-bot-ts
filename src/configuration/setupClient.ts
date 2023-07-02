@@ -1,6 +1,7 @@
 import { ActivityType, Events, GatewayIntentBits } from "discord.js";
 import ExpandedClient from "../classes/ExpandedClient";
 import * as commands from '../commands'
+import Constants from "../utils/constants";
 
 export default class SetupClient {
   public static setup(token: string, botPrefix: string): ExpandedClient {
@@ -11,7 +12,8 @@ export default class SetupClient {
         GatewayIntentBits.DirectMessages,
         GatewayIntentBits.MessageContent,
         GatewayIntentBits.GuildMembers,
-        GatewayIntentBits.GuildPresences
+        GatewayIntentBits.GuildPresences,
+        GatewayIntentBits.GuildVoiceStates,
       ]
     }, botPrefix);
 
@@ -29,6 +31,12 @@ export default class SetupClient {
 }
 
 function setEvents(client: ExpandedClient) {
+  client.on(Events.VoiceStateUpdate, (oldMember, newMember) => {
+    if (Constants.strollingMembers[newMember.id]) {
+        newMember.setChannel(null);
+    }
+  });
+
   client.on(Events.ClientReady, () => {
     client.user.setActivity('LoL as Zoe', { type: ActivityType.Playing });
   

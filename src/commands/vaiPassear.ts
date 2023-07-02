@@ -11,28 +11,60 @@ export default class VaiPassear extends BaseCommand {
         super(client);
     }
 
+    private hasProtection(member: any): boolean {
+        let hasProtection = false;
+
+        member.roles.cache.forEach(role => {
+            if (role.name.toLowerCase().includes(Constants.protectedRoleName)) hasProtection = true
+        })
+
+        return hasProtection;
+    }
+
+    private setStrolling(member: any, strolling: boolean): void {
+        Constants.strollingMembers[member.id] = strolling;
+        if (strolling) member.voice.disconnect();
+    }
+
+
     public async implementation(args: string[], message: Message): Promise<void> {
         if (message.mentions.everyone) {
             message.reply('Não vou deixar você fazer isso.');
             return;
         }
 
-        const user = message.mentions.users.first();
-        const member = message.guild?.members.cache.get(user?.id as string);
+        const mentionedUser = message.mentions.users.first();
+        const victim = message.guild?.members.cache.get(mentionedUser?.id as string);
+        const author = message.guild?.members.cache.get(message.author.id as string);
 
-        if (Constants.strollingMembers[member.id]) {
-            Constants.strollingMembers[member.id] = false;
+        let victimHasProtection = this.hasProtection(victim);
+        let authorHasProtection = this.hasProtection(author);
+
+        if (Constants.strollingMembers[victim.id]) {
+            this.setStrolling(victim, false);
             message.reply('Volta aqui, seu infeliz.');
             return;
         }
-        else {
-            if (member?.voice.channel) {
-                // member.voice.disconnect();
-                message.reply('Vai passear, seu infeliz.');
-                Constants.strollingMembers[member.id] = true;
+        
+        if (victimHasProtection) {
+            if (authorHasProtection) {
+                if (author?.voice.channel && victim?.voice.channel) {
+                    message.reply('Vai todo mundo passear, seus infelizes.');
+                    this.setStrolling(author, true);
+                    this.setStrolling(victim, true);
+                }
             }
             else {
-                message.reply('Esse infeliz não está em nenhum canal de voz.');
+                if (author?.voice.channel) {
+                    this.setStrolling(author, true);
+                    message.reply('Vai passear, seu infeliz.');
+                }
+            }
+        }
+        else {
+            if (victim?.voice.channel) {
+                this.setStrolling(victim, true);
+                message.reply('Vai passear, seu infeliz.');
             }
         }
 
