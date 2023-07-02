@@ -6,6 +6,7 @@ import { Doge } from './commands';
 dotenv.config();
 
 const token = process.env.DISCORD_BOT_SECRET;
+const botPrefix = process.env.DISCORD_BOT_PREFIX;
 
 console.log('Bot is starting...', '\n');
 
@@ -18,7 +19,7 @@ const client = new ExpandedClient({
     GatewayIntentBits.GuildMembers,
     GatewayIntentBits.GuildPresences
   ]
-});
+}, botPrefix);
 
 client.commands.set(Doge.commandName, new Doge(client));
 
