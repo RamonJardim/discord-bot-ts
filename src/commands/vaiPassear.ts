@@ -29,7 +29,7 @@ export default class VaiPassear extends BaseCommand {
 
     public async implementation(args: string[], message: Message): Promise<void> {
         if (message.mentions.everyone) {
-            message.reply('Não vou deixar você fazer isso.');
+            message.reply('Não vou deixar você fazer isso!');
             return;
         }
 
