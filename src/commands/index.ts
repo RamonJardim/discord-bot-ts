@@ -1,7 +1,7 @@
-import Doge from './doge'
-import VaiPassear from './vaiPassear'
+import Doge from './doge';
+import VaiPassear from './vaiPassear';
 
 export {
-    Doge,
-    VaiPassear,
-}
+  Doge,
+  VaiPassear,
+};

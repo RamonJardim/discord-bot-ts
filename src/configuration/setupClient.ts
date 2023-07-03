@@ -1,10 +1,13 @@
-import { ActivityType, Events, GatewayIntentBits } from "discord.js";
-import ExpandedClient from "../classes/ExpandedClient";
-import * as commands from '../commands'
-import Constants from "../utils/constants";
+import { ActivityType, Events, GatewayIntentBits } from 'discord.js';
+import ExpandedClient from '../classes/ExpandedClient';
+import * as commands from '../commands';
+import MongoDBClient from './MongoDBClient';
+import { Collection } from 'mongodb';
 
 export default class SetupClient {
-  public static setup(token: string, botPrefix: string): ExpandedClient {
+  public static async setup(token: string, botPrefix: string): Promise<ExpandedClient> {
+    const mongoClient = new MongoDBClient().getMongoCollection();
+
     const client = new ExpandedClient({
       intents: [
         GatewayIntentBits.Guilds,
@@ -17,23 +20,25 @@ export default class SetupClient {
       ]
     }, botPrefix);
 
+    // Todo: force types somehow
     Object.keys(commands).forEach(commandKey => {
-      const command = commands[commandKey]
-      client.commands.set(command.commandName, new command(client));
+      const command = commands[commandKey];
+      client.commands.set(command.commandName, new command(client, mongoClient));
     });
 
-    setEvents(client);
+    setEvents(client, mongoClient);
 
     client.login(token);
 
-    return client
+    return client;
   }
 }
 
-function setEvents(client: ExpandedClient) {
-  client.on(Events.VoiceStateUpdate, (oldMember, newMember) => {
-    if (Constants.strollingMembers[newMember.id]) {
-        newMember.setChannel(null);
+function setEvents(client: ExpandedClient, mongoClient: Collection) {
+  client.on(Events.VoiceStateUpdate, async (oldMember, newMember) => {
+    const guildInfo = await mongoClient.findOne({ guildId: newMember.guild.id });
+    if (guildInfo.strollingMembers[newMember.id]) {
+      newMember.setChannel(null);
     }
   });
 
