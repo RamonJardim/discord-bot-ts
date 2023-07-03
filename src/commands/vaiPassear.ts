@@ -49,7 +49,7 @@ export default class VaiPassear extends BaseCommand {
         if (victimHasProtection) {
             if (authorHasProtection) {
                 if (author?.voice.channel && victim?.voice.channel) {
-                    message.reply('Vai todo mundo passear, seus infelizes.');
+                    message.reply('Vai todo mundo passear, seus infelizes!');
                     this.setStrolling(author, true);
                     this.setStrolling(victim, true);
                 }
