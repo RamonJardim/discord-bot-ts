@@ -1,5 +1,5 @@
 import { Client, ClientOptions } from 'discord.js';
-import BaseCommand from './BaseCommand';
+import BaseCommand from './base-command';
 
 export default class ExpandedClient extends Client {
   constructor(options: ClientOptions, prefix: string) {

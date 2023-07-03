@@ -1,5 +1,5 @@
 import Doge from './doge';
-import VaiPassear from './vaiPassear';
+import VaiPassear from './vai-passear';
 
 export {
   Doge,

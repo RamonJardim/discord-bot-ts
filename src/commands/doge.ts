@@ -1,5 +1,5 @@
 import { Client, Message } from 'discord.js';
-import BaseCommand from '../classes/BaseCommand';
+import BaseCommand from '../classes/base-command';
 import doge from 'dogeify-js';
 import { Collection } from 'mongodb';
 

@@ -1,7 +1,7 @@
 import { ActivityType, Events, GatewayIntentBits } from 'discord.js';
-import ExpandedClient from '../classes/ExpandedClient';
+import ExpandedClient from '../classes/expanded-client';
 import * as commands from '../commands';
-import MongoDBClient from './MongoDBClient';
+import MongoDBClient from './mongo-db-client';
 import { Collection } from 'mongodb';
 
 export default class SetupClient {

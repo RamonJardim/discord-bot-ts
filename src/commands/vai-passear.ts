@@ -1,5 +1,5 @@
 import { Client, GuildMember, Message } from 'discord.js';
-import BaseCommand from '../classes/BaseCommand';
+import BaseCommand from '../classes/base-command';
 import Constants from '../utils/constants';
 import { Collection } from 'mongodb';
 

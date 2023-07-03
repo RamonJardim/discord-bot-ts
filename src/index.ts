@@ -1,5 +1,5 @@
 import dotenv from 'dotenv';
-import SetupClient from './configuration/setupClient';
+import SetupClient from './configuration/setup-client';
 
 dotenv.config();
 
