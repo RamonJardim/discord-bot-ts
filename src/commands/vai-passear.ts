@@ -7,8 +7,9 @@ import Constants from '../utils/constants'
 
 export default class VaiPassear extends BaseCommand {
   static commandName = 'vaiPassear'
-  description = 'Impede/permite o infeliz de entrar em qualquer canal de voz.'
-  usage = 'vaiPassear + @user em modo toggle'
+  static description = 'Impede/permite o infeliz de entrar em qualquer canal de voz.'
+  static usage = 'vaiPassear + @user em modo toggle'
+  static aliases = ['vp']
 
   constructor(client: Client) {
     super(client)

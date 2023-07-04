@@ -5,8 +5,9 @@ import BaseCommand from '../classes/base-command'
 
 export default class Doge extends BaseCommand {
   static commandName = 'doge'
-  description = 'such doge'
-  usage = 'doge'
+  static description = 'such doge'
+  static usage = 'doge'
+  static aliases = []
 
   constructor(client: Client) {
     super(client)
