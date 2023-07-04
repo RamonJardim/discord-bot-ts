@@ -1,17 +1,20 @@
-import { Client, Message } from "discord.js";
-import BaseCommand from "../classes/BaseCommand";
-import doge from 'dogeify-js';
+import { Client, Message } from 'discord.js'
+import doge from 'dogeify-js'
+
+import BaseCommand from '../classes/base-command'
 
 export default class Doge extends BaseCommand {
-    public static commandName: string = 'doge';
-    public description: string = 'such doge';
-    public usage: string = 'doge';
+  static commandName = 'doge'
+  static description = 'such doge'
+  static usage = 'doge'
+  static aliases = []
 
-    constructor(client: Client) {
-        super(client);
-    }
+  constructor(client: Client) {
+    super(client)
+  }
 
-    public async implementation(args: string[], message: Message): Promise<void> {
-        message.channel.send(await doge(args))
-    }
+  async implementation(args: string[], message: Message): Promise<void> {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+    message.channel.send(await doge(args.join(' ')) as string)
+  }
 }
