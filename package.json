@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "start": "tsc && node out/index.js",
+    "start": "node out/index.js",
     "build": "tsc",
     "postinstall": "npm run build",
     "lint": "eslint . --ext .ts",
