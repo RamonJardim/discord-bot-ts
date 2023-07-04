@@ -1,81 +1,83 @@
-import { Client, GuildMember, Message } from 'discord.js';
-import BaseCommand from '../classes/base-command';
-import Constants from '../utils/constants';
-import { Collection } from 'mongodb';
+import { Client, GuildMember, Message } from 'discord.js'
+
+import BaseCommand from '../classes/base-command'
+import GuildInfoRepository from '../repository/guild-info-repository'
+import Constants from '../utils/constants'
 
 
 export default class VaiPassear extends BaseCommand {
-  public static commandName = 'vaiPassear';
-  public description = 'Impede/permite o infeliz de entrar em qualquer canal de voz.';
-  public usage = 'vaiPassear + @user em modo toggle';
+  static commandName = 'vaiPassear'
+  description = 'Impede/permite o infeliz de entrar em qualquer canal de voz.'
+  usage = 'vaiPassear + @user em modo toggle'
 
-  constructor(client: Client, mongoCollection: Collection) {
-    super(client, mongoCollection);
+  constructor(client: Client) {
+    super(client)
   }
 
   private hasProtection(member: GuildMember): boolean {
-    let hasProtection = false;
+    let hasProtection = false
 
     member.roles.cache.forEach(role => {
-      if (role.name.toLowerCase().includes(Constants.protectedRoleName)) hasProtection = true;
-    });
+      if (role.name.toLowerCase().includes(Constants.protectedRoleName)) hasProtection = true
+    })
 
-    return hasProtection;
+    return hasProtection
   }
 
   private async setStrolling(member: GuildMember, strolling: boolean): Promise<void> {
-    const guildInfo = await this.mongoCollection.findOne({ guildId: member.guild.id });
-    await this.mongoCollection.updateOne({ guildId: member.guild.id }, { $set: { strollingMembers: { ...guildInfo.strollingMembers, [member.id]: strolling } } });
+    const guildInfo = await GuildInfoRepository.getGuildInfo(member.guild.id, member.guild.name)
 
+    await GuildInfoRepository.updateStrollingMembers(guildInfo.guildId || '', { ...(guildInfo.strollingMembers), [member.id]: strolling })
 
-    if (strolling) member.voice.disconnect();
+    if (strolling) member.voice.disconnect()
   }
 
 
-  public async implementation(args: string[], message: Message): Promise<void> {
-    let guildInfo = await this.mongoCollection.findOne({ guildId: message.guild.id });
-    if (!guildInfo) {
-      await this.mongoCollection.insertOne({ guildId: message.guild.id, guildName: message.guild.name, strollingMembers: {} });
-      guildInfo = await this.mongoCollection.findOne({ guildId: message.guild.id });
-    }
+  async implementation(args: string[], message: Message): Promise<void> {
+    const guildInfo = await GuildInfoRepository.getGuildInfo(message.guild?.id ?? '', message.guild?.name ?? '')
 
     if (message.mentions.everyone) {
-      message.reply('Não vou deixar você fazer isso.');
-      return;
+      message.reply('Não vou deixar você fazer isso.')
+
+      return
     }
 
-    const mentionedUser = message.mentions.users.first();
-    const victim = message.guild?.members.cache.get(mentionedUser?.id);
-    const author = message.guild?.members.cache.get(message.author.id);
+    const mentionedUser = message.mentions.users.first()
+    const victim = message.guild?.members.cache.get(mentionedUser?.id ?? '')
+    const author = message.guild?.members.cache.get(message.author.id)
 
-    const victimHasProtection = this.hasProtection(victim);
-    const authorHasProtection = this.hasProtection(author);
+    if(!victim) throw new Error('Victim not found')
+    if(!author) throw new Error('Author not found')
+
+    const victimHasProtection = this.hasProtection(victim)
+    const authorHasProtection = this.hasProtection(author)
 
     if (guildInfo.strollingMembers[victim.id]) {
-      await this.setStrolling(victim, false);
-      message.reply('Volta aqui, seu infeliz.');
-      return;
+      await this.setStrolling(victim, false)
+      message.reply('Volta aqui, seu infeliz.')
+
+      return
     }
 
     if (victimHasProtection) {
       if (authorHasProtection) {
-        if (author?.voice.channel && victim?.voice.channel) {
-          await this.setStrolling(author, true);
-          await this.setStrolling(victim, true);
-          message.reply('Vai todo mundo passear, seus infelizes.');
+        if (author.voice.channel && victim.voice.channel) {
+          await this.setStrolling(author, true)
+          await this.setStrolling(victim, true)
+          message.reply('Vai todo mundo passear, seus infelizes.')
         }
       }
       else {
-        if (author?.voice.channel) {
-          await this.setStrolling(author, true);
-          message.reply('Vai passear, seu infeliz.');
+        if (author.voice.channel) {
+          await this.setStrolling(author, true)
+          message.reply('Vai passear, seu infeliz.')
         }
       }
     }
     else {
-      if (victim?.voice.channel) {
-        this.setStrolling(victim, true);
-        message.reply('Vai passear, seu infeliz.');
+      if (victim.voice.channel) {
+        this.setStrolling(victim, true)
+        message.reply('Vai passear, seu infeliz.')
       }
     }
   }

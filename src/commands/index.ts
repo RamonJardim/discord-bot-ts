@@ -1,7 +1,7 @@
-import Doge from './doge';
-import VaiPassear from './vai-passear';
+import Doge from './doge'
+import VaiPassear from './vai-passear'
 
-export {
+export const commands =  [
   Doge,
   VaiPassear,
-};
+]

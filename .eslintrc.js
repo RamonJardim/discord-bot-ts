@@ -1,30 +1,61 @@
 module.exports = {
   env: {
-    browser: false,
-    es2021: true,
+    node: true,
   },
-  extends: ['eslint:recommended', 'plugin:@typescript-eslint/recommended'],
-  overrides: [
-    {
-      env: {
-        node: true,
-      },
-      files: ['.eslintrc.{js,cjs}'],
-      parserOptions: {
-        sourceType: 'script',
-      },
-    },
+  extends: [
+    'eslint:recommended',
+    'plugin:@typescript-eslint/recommended',
+    'plugin:@typescript-eslint/recommended-requiring-type-checking',
   ],
   parser: '@typescript-eslint/parser',
   parserOptions: {
-    ecmaVersion: 'latest',
+    project: './tsconfig.json',
     sourceType: 'module',
   },
-  plugins: ['@typescript-eslint'],
+  plugins: ['@typescript-eslint', 'simple-import-sort'],
   rules: {
-    '@typescript-eslint/no-explicit-any': 'error',
+    '@typescript-eslint/explicit-member-accessibility': [
+      'error',
+      {
+        accessibility: 'no-public',
+      },
+    ],
+    '@typescript-eslint/no-floating-promises': 'off',
+    '@typescript-eslint/no-unnecessary-boolean-literal-compare': 'error',
+    '@typescript-eslint/no-unnecessary-condition': 'error',
+    '@typescript-eslint/quotes': [
+      'error',
+      'single',
+      {
+        avoidEscape: true,
+      },
+    ],
+    eqeqeq: 'error',
+    'max-len': [
+      'error',
+      {
+        code: 140,
+      },
+    ],
+    'no-underscore-dangle': 'error',
+    'padding-line-between-statements': [
+      'error',
+      {
+        blankLine: 'always',
+        prev: '*',
+        next: 'return',
+      },
+    ],
+    'prefer-template': 'error',
+    'simple-import-sort/imports': 'error',
+    semi: ['error', 'never'],
+    'template-curly-spacing': ['error', 'always'],
+    'object-curly-spacing': ['error', 'always'],
+    '@typescript-eslint/explicit-function-return-type': 'error',
+    camelcase: 'off',
+    'eol-last': ['error', 'always'],
     indent: ['error', 2],
-    quotes: ['error', 'single'],
-    semi: ['error', 'always'],
+    'no-shadow': 'off',
+    '@typescript-eslint/no-shadow': ['error'],
   },
-};
+}

@@ -1,11 +1,12 @@
-import dotenv from 'dotenv';
-import SetupClient from './configuration/setup-client';
+import dotenv from 'dotenv'
 
-dotenv.config();
+dotenv.config()
 
-const token = process.env.DISCORD_BOT_SECRET;
-const botPrefix = process.env.DISCORD_BOT_PREFIX;
+import SetupClient from './configuration/setup-client'
 
-console.log('Bot is starting...', '\n');
+const token = process.env.DISCORD_BOT_SECRET ?? ''
+const botPrefix = process.env.DISCORD_BOT_PREFIX ?? ''
 
-SetupClient.setup(token, botPrefix);
+console.log('Bot is starting...', '\n')
+
+SetupClient.setup(token, botPrefix)

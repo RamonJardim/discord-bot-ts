@@ -1,18 +1,19 @@
-import { Client, Message } from 'discord.js';
-import BaseCommand from '../classes/base-command';
-import doge from 'dogeify-js';
-import { Collection } from 'mongodb';
+import { Client, Message } from 'discord.js'
+import doge from 'dogeify-js'
+
+import BaseCommand from '../classes/base-command'
 
 export default class Doge extends BaseCommand {
-  public static commandName = 'doge';
-  public description = 'such doge';
-  public usage = 'doge';
+  static commandName = 'doge'
+  description = 'such doge'
+  usage = 'doge'
 
-  constructor(client: Client, mongoCollection: Collection) {
-    super(client, mongoCollection);
+  constructor(client: Client) {
+    super(client)
   }
 
-  public async implementation(args: string[], message: Message): Promise<void> {
-    message.channel.send(await doge(args));
+  async implementation(args: string[], message: Message): Promise<void> {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+    message.channel.send(await doge(args.join(' ')) as string)
   }
 }
